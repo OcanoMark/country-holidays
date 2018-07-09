@@ -1,0 +1,160 @@
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:300,400');
+
+body {
+	font-family: "Open Sans", "Arial", sans-serif;
+	font-size: 14px;
+}
+
+#card-form .card-header {
+	font-weight: bold;
+	color: white;
+}
+
+#card-form .card-body {
+	background-color: #f2f2f2;
+}
+
+form .form-group {
+	position: relative;
+}
+
+.form-control {
+	font-size: 13px;
+}
+
+input[type=text] {
+	height: 31px;
+}
+
+#country-loader, #year-loader, #fetch-loader {
+	width: 20px;
+	height: 20px;
+}
+
+#country-loader, #year-loader {
+	margin-top: 5px;
+}
+
+#year-loader, #fetch-loader {
+	display: none;
+}
+
+#fetch-loader {
+	margin-top: 0px;
+}
+
+#table-div {
+   	margin-bottom: 48px;
+}
+
+#holiday-table {
+	display: none;
+	font-size: 12px;
+}
+
+#holiday-table_wrapper table {
+   	display: table;
+}
+
+#holiday-table_wrapper table thead {
+	background-color: #17a2b8;
+	color: white;
+}
+
+#holiday-table_wrapper table tbody tr td:nth-child(2) {
+	white-space: nowrap;
+}
+
+#holiday-table_wrapper table tbody tr td:nth-child(3) {
+	min-width: 100px;
+}
+
+#table-caption {
+	margin-left: 15px;
+	font-weight: bold;
+}
+
+#regional-div {
+	display: none;
+	margin-top: 10px;
+	margin-left: 10px;
+}
+
+/* DataTable style override start */
+
+#holiday-table_wrapper {
+	position: relative;
+	top: 10px;
+	padding: 0px 10px;
+}
+
+#holiday-table_wrapper .dt-buttons {
+	margin-bottom: 20px;
+}
+
+#holiday-table_wrapper .dataTables_length,
+#holiday-table_wrapper .dataTables_filter,
+#holiday-table_wrapper .dataTables_info {
+	text-align: center;
+}
+
+#holiday-table_wrapper .dataTables_info {
+	white-space: initial;
+}
+
+#holiday-table_wrapper .dataTables_paginate {
+	margin: 0px auto;
+}
+
+#holiday-table_wrapper .dataTables_paginate ul.pagination {
+	display: inline-flex;
+}
+
+/* DataTable style override end */
+
+@media only screen and (max-width: 991px) {
+    #card-form .card-body {
+    	padding: 48px !important;
+    }
+
+    #table-div {
+    	margin: 48px 0px;
+    }
+}
+
+@media only screen and (max-width: 575px) {
+	#card-form .card-body {
+    	padding: 20px 48px !important;
+    }
+
+    label.col-form-label {
+    	text-align: left !important;
+    }
+
+    select#country,
+    select#year {
+    	width: 80%;
+    }
+
+    #country-loader, #year-loader {
+    	position: absolute;
+    	top: 35px;
+    	right: 10%;
+    }
+
+    #fetch-button {
+    	margin-top: 10px;
+    }
+}
+
+@media only screen and (max-width: 487px) {
+	#holiday-table_wrapper table {
+    	display: block;
+    }
+}
+
+@media only screen and (max-width: 405px) {
+    body > .container-fluid {
+    	padding: 0px 15px !important;
+    }
+}
