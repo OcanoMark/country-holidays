@@ -102,12 +102,8 @@ input[type=text] {
 	white-space: initial;
 }
 
-#holiday-table_wrapper .dataTables_paginate {
-	margin: 0px auto;
-}
-
 #holiday-table_wrapper .dataTables_paginate ul.pagination {
-	display: inline-flex;
+	justify-content: center;
 }
 
 /* DataTable style override end */
