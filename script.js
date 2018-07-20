@@ -195,25 +195,13 @@ function displayTable(headers, holidays, country, year) {
                 "pdfHtml5"
             ]
         });
-
-    // Called when datatable is drawn
-    centerPagination();
 }
 
 // Regional checkbox listener
 $("#regional").on("change", function() {
     // Redraw datatable
     $("#holiday-table").DataTable().draw();
-
-    // Called when datatable is drawn
-    centerPagination();
 });
-
-// Dynamically center datatable pagination
-function centerPagination() {
-    var width = $("#holiday-table_wrapper .dataTables_paginate ul.pagination").width();
-    $("#holiday-table_wrapper .dataTables_paginate").width(width);
-}
 
 // Display error message
 function displayError() {
