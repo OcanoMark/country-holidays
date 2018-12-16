@@ -1,4 +1,5 @@
 // Global variables
+var allorigins = "https://api.allorigins.ml/get?url=";
 var currYear = new Date().getFullYear();
 var weekdays = [];
 weekdays["sunday"] = 0;
@@ -15,7 +16,7 @@ $(function() {
     var countryListUrl = "https://www.officeholidays.com/countries/index.php";
 
     // Obtain raw html data
-    $.getJSON("https://allorigins.me/get?url=" + encodeURIComponent(countryListUrl))
+    $.getJSON(allorigins + encodeURIComponent(countryListUrl))
 
         // Success function
         .done(function(data) {
@@ -57,7 +58,7 @@ $("#country").on("change", function() {
     $("#year-loader").show();
 
     // Obtain raw html data
-    $.getJSON("https://allorigins.me/get?url=" + encodeURIComponent(yearListUrl))
+    $.getJSON(allorigins + encodeURIComponent(yearListUrl))
 
         // Success function
         .done(function(data) {
@@ -74,7 +75,7 @@ $("#country").on("change", function() {
             });
 
             // Include current year as the second entry
-            years.splice(1, 0, currYear);
+            // years.splice(1, 0, currYear);
 
             // Build contents of year combobox
             $.each(years, function(i, d) {
@@ -111,7 +112,7 @@ $("form").submit(function(e) {
     $("#fetch-loader").show();
 
     // Obtain raw html data
-    $.getJSON("https://allorigins.me/get?url=" + encodeURIComponent(url))
+    $.getJSON(allorigins + encodeURIComponent(url))
 
         // Success function
         .done(function(data) {
@@ -159,6 +160,8 @@ $("form").submit(function(e) {
 
 // Display holiday records in a datatable
 function displayTable(headers, holidays, country, year) {
+	
+	var exportOpt = { columns: [0, ':visible'] };
 
     // Destroy previous datatale
     if ($.fn.DataTable.isDataTable("#holiday-table")) {
@@ -189,10 +192,19 @@ function displayTable(headers, holidays, country, year) {
                 { targets: [4], visible: false }
             ],
             buttons: [
-                "copyHtml5",
-                "excelHtml5",
-                "csvHtml5",
-                "pdfHtml5"
+				{
+					extend: 'copyHtml5',
+					exportOptions: exportOpt
+				}, {
+					extend: 'excelHtml5',
+					exportOptions: exportOpt
+				}, {
+					extend: 'csvHtml5',
+					exportOptions: exportOpt
+				}, {
+					extend: 'pdfHtml5',
+					exportOptions: exportOpt
+				}
             ]
         });
 }
