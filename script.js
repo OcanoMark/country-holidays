@@ -1,5 +1,6 @@
 // Global variables
-var allorigins = "https://api.allorigins.ml/get?url=";
+var website = $("#website").val();
+var allorigins = "http://www.whateverorigin.org/get?url=";
 var currYear = new Date().getFullYear();
 var weekdays = [];
 weekdays["sunday"] = 0;
@@ -13,30 +14,25 @@ weekdays["saturday"] = 6;
 // On ready function
 $(function() {
     // URL where country list will be obtained
-    var countryListUrl = "https://www.officeholidays.com/countries/index.php";
+    var countryListUrl = website + "/countries/";
 
     // Obtain raw html data
-    $.getJSON(allorigins + encodeURIComponent(countryListUrl))
-
+    $.getJSON(allorigins + encodeURIComponent(countryListUrl) + "&callback=?")
         // Success function
         .done(function(data) {
-            // Obtain and sanitize countries table
-            var table = data.contents
-                .match(/<table class="info-table" width="100%">([\s\S]*?)<\/table>/)[0]
-                .replace(/<img src/g, "<img source");
-
-            // Iterate over and obtain each country record
-            $(table).find("tbody tr td a").each(function() {
-
-                // Build contents of country combobox
-                $("#country").append("<option value='" + $(this).attr("href").split("/")[0] +
-                    "'>" + this.textContent.trim() +
-                    "</option>");
-            });
+			// Obtain countries list
+			var dom = $.parseHTML(data.contents);
+			dom = $(dom).find("div.thirteen.columns div.four.columns li a");
+			
+			// Iterate over and build country dropdown list
+			$(dom).each(function() {
+				$("#country").append("<option value='" +
+					$(this).attr("href").replace(countryListUrl, "") +
+					"'>" + this.textContent.trim() + "</option>");
+			});
 
             $("#country-loader").hide();
             $("select#country").attr("disabled", false);
-            $("#fetch-button").attr("disabled", false);
         })
 
         // Called when there is error
@@ -47,41 +43,34 @@ $(function() {
 
 // Obtain available record / years of the selected country
 $("#country").on("change", function() {
-    // URL where year list will be obtained
-    var yearListUrl = "https://www.officeholidays.com/countries/" + $("#country").val();
-
     // Reset year selector
-    $("#year")
-        .attr("disabled", true)
-        .empty()
-        .append("<option value=''>Current year</option>");
+    $("#year").attr("disabled", true).empty();
+	$("#fetch-button").attr("disabled", true);
+	
+	if (this.value == "")
+		return;
+	
     $("#year-loader").show();
+	
+	// URL where year list will be obtained
+    var yearListUrl = website + "/countries/" + $("#country").val();
 
     // Obtain raw html data
-    $.getJSON(allorigins + encodeURIComponent(yearListUrl))
-
+    $.getJSON(allorigins + encodeURIComponent(yearListUrl) + "&callback=?")
         // Success function
         .done(function(data) {
-            // Obtain and sanitize year combobox
-            var select = data.contents
-                .match(/<form name="form2" id="form2" class="styled-select-left">([\s\S]*?)<\/form>/)[0];
-            var years = [];
-
-            // Iterate over and obtain each available year
-            $(select).find("select option").each(function() {
-                if (!isNaN(this.textContent)) {
-                    years.push(this.textContent);
-                }
-            });
-
-            // Include current year as the second entry
-            // years.splice(1, 0, currYear);
-
-            // Build contents of year combobox
-            $.each(years, function(i, d) {
-                $('#year').append("<option value='" + d + "'>" + d + "</option>");
-            });
-
+			// Obtain countries list
+			var dom = $.parseHTML(data.contents);
+			dom = $(dom).find("select.year option");
+			
+			// Iterate over and build country dropdown list
+			$(dom).each(function() {
+				$('#year').append("<option value='" +
+					$(this).attr("value").replace("/", "") + "'>" +
+					this.textContent.trim() + "</option>");
+			});
+			
+			$("#year option:first").text("Select a year");
             $("#year").attr("disabled", false);
             $("#year-loader").hide();
         })
@@ -92,34 +81,32 @@ $("#country").on("change", function() {
         });
 });
 
+$("#year").on("change", function() {
+	$("#fetch-button").attr("disabled", (this.value == ""));
+});
+
 // Triggered when submit button is clicked
 $("form").submit(function(e) {
     e.preventDefault();
 
     // Initialize variables
-    var website = $("#website").val();
     var country = $("#country").val();
-    var selectedCountry = $("#country")[0][$("#country")[0].selectedIndex].text;
+    var selectedCountry = $("#country option:selected").text();
     var year = ($("#year").val() == "") ? currYear : $("#year").val();
-    var url = website + "/countries/" + country + "/" + year + ".php";
-
-    // Prevent submission when country variable is an empty string
-    if (country == "") {
-        return false;
-    }
+    var url = website + "/countries/" + country + "/" + year;
 
     // Show loader beside the submit button
     $("#fetch-loader").show();
 
     // Obtain raw html data
-    $.getJSON(allorigins + encodeURIComponent(url))
+    $.getJSON(allorigins + encodeURIComponent(url) + "&callback=?")
 
         // Success function
         .done(function(data) {
-            // Obtain and sanitize holiday table
-            var table = data.contents
-                .match(/<table class="list-table">([\s\S]*?)<\/table>/)[0];
-
+			// Obtain holiday table
+			var table = $.parseHTML(data.contents);
+			table = $(table).find("table.country-table");
+			
             var headers = [];
             var holidays = [];
 
@@ -133,10 +120,9 @@ $("form").submit(function(e) {
             // Iterate over the table body rows
             $(table).find("tbody tr").each(function() {
                 var arr = [];
-
+			
                 // Iterate over each cell in a row
                 $(this).find("td").each(function(i, d) {
-                    $(this).find("time").remove();
                     arr.push(this.textContent.trim());
                 });
 
@@ -144,7 +130,7 @@ $("form").submit(function(e) {
                 arr.push($(this).attr("class"));
                 holidays.push(arr);
             });
-
+			
             // Hide loader when data is ready
             $("#fetch-loader").hide();
 
@@ -160,7 +146,6 @@ $("form").submit(function(e) {
 
 // Display holiday records in a datatable
 function displayTable(headers, holidays, country, year) {
-	
 	var exportOpt = { columns: [0, ':visible'] };
 
     // Destroy previous datatale
@@ -229,7 +214,7 @@ function displayError() {
 
 // Include / exclude regional holidays
 $.fn.dataTableExt.afnFiltering.push(function(oSettings, aData, iDataIndex) {
-    return ($("#regional")[0].checked) ? true :  aData[4] != "regional";
+    return ($("#regional")[0].checked) ? true :  aData[3] != "Regional Holiday";
 });
 
 // Exclude hidden columns from search
