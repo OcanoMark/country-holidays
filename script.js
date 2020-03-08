@@ -26,9 +26,8 @@ $(function() {
 			
 			// Iterate over and build country dropdown list
 			$(dom).each(function() {
-				$("#country").append("<option value='" +
-					$(this).attr("href").replace(countryListUrl, "") +
-					"'>" + this.textContent.trim() + "</option>");
+				$('#country').append(new Option(this.textContent.trim(),
+					$(this).attr("href").replace(countryListUrl, "")));
 			});
 
             $("#country-loader").hide();
@@ -45,6 +44,7 @@ $(function() {
 $("#country").on("change", function() {
     // Reset year selector
     $("#year").attr("disabled", true).empty();
+	$('#year').append(new Option("Select a year", ""));
 	$("#fetch-button").attr("disabled", true);
 	
 	if (this.value == "")
@@ -65,12 +65,11 @@ $("#country").on("change", function() {
 			
 			// Iterate over and build country dropdown list
 			$(dom).each(function() {
-				$('#year').append("<option value='" +
-					$(this).attr("value").replace("/", "") + "'>" +
-					this.textContent.trim() + "</option>");
+				$('#year').append(new Option(this.textContent.trim(),
+					$(this).attr("value").replace("/", "")));
 			});
 			
-			$("#year option:first").text("Select a year");
+			$("#year option:nth-child(2)").remove();
             $("#year").attr("disabled", false);
             $("#year-loader").hide();
         })
