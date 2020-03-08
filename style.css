@@ -89,7 +89,8 @@ input[type=text] {
 }
 
 #holiday-table_wrapper .dt-buttons {
-	margin-bottom: 20px;
+	margin-bottom: 10px;
+	float: none;
 }
 
 #holiday-table_wrapper .dataTables_length,
