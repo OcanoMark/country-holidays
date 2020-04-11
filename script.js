@@ -1,6 +1,5 @@
 // Global variables
 var website = $("#website").val();
-var allorigins = "http://www.whateverorigin.org/get?url=";
 var currYear = new Date().getFullYear();
 var weekdays = [];
 weekdays["sunday"] = 0;
@@ -13,35 +12,38 @@ weekdays["saturday"] = 6;
 
 // On ready function
 $(function() {
-    // URL where country list will be obtained
-    var countryListUrl = website + "/countries/";
+	// URL where country list will be obtained
+	var url = website + "/countries/";
 
-    // Obtain raw html data
-    $.getJSON(allorigins + encodeURIComponent(countryListUrl) + "&callback=?")
-        // Success function
-        .done(function(data) {
+	// Obtain html markup
+	$.ajax({
+		url: "holidays.php",
+		type: "GET",
+		data: { url: url },
+		success: function(data) {
 			// Obtain countries list
-			var dom = $.parseHTML(data.contents);
-			dom = $(dom).find("div.thirteen.columns div.four.columns li a");
-			
+			var dom = $(data).find("div.thirteen.columns div.four.columns li a");
+				
 			// Iterate over and build country dropdown list
 			$(dom).each(function() {
 				$('#country').append(new Option(this.textContent.trim(),
-					$(this).attr("href").replace(countryListUrl, "")));
+					$(this).attr("href").replace(url, "")));
 			});
 
-            $("#country-loader").hide();
-            $("select#country").attr("disabled", false);
-        })
-
-        // Called when there is error
-        .fail(function() {
-            displayError();
-        });
+			$("#country-loader").hide();
+			$("select#country").attr("disabled", false);
+		},
+		error: function() {
+			displayError();
+		}
+	});
 });
 
 // Obtain available record / years of the selected country
 $("#country").on("change", function() {
+	// URL where year list will be obtained
+	var url = website + "/countries/" + $("#country").val()
+	
     // Reset year selector
     $("#year").attr("disabled", true).empty();
 	$('#year').append(new Option("Select a year", ""));
@@ -52,16 +54,14 @@ $("#country").on("change", function() {
 	
     $("#year-loader").show();
 	
-	// URL where year list will be obtained
-    var yearListUrl = website + "/countries/" + $("#country").val();
-
-    // Obtain raw html data
-    $.getJSON(allorigins + encodeURIComponent(yearListUrl) + "&callback=?")
-        // Success function
-        .done(function(data) {
-			// Obtain countries list
-			var dom = $.parseHTML(data.contents);
-			dom = $(dom).find("select.year option");
+	// Obtain html markup
+	$.ajax({
+		url: "holidays.php",
+		type: "GET",
+		data: { url: url },
+		success: function(data) {
+			// Obtain year list
+			dom = $(data).find("select.year option");
 			
 			// Iterate over and build country dropdown list
 			$(dom).each(function() {
@@ -72,12 +72,11 @@ $("#country").on("change", function() {
 			$("#year option:nth-child(2)").remove();
             $("#year").attr("disabled", false);
             $("#year-loader").hide();
-        })
-
-        // Called when there is error
-        .fail(function() {
-            displayError();
-        });
+		},
+		error: function() {
+			displayError();
+		}
+	});
 });
 
 $("#year").on("change", function() {
@@ -96,15 +95,15 @@ $("form").submit(function(e) {
 
     // Show loader beside the submit button
     $("#fetch-loader").show();
-
-    // Obtain raw html data
-    $.getJSON(allorigins + encodeURIComponent(url) + "&callback=?")
-
-        // Success function
-        .done(function(data) {
+	
+	// Obtain html markup
+	$.ajax({
+		url: "holidays.php",
+		type: "GET",
+		data: { url: url },
+		success: function(data) {
 			// Obtain holiday table
-			var table = $.parseHTML(data.contents);
-			table = $(table).find("table.country-table");
+			table = $(data).find("table.country-table");
 			
             var headers = [];
             var holidays = [];
@@ -135,12 +134,11 @@ $("form").submit(function(e) {
 
             // Display holiday records
             displayTable(headers, holidays, selectedCountry, year);
-        })
-
-        // Called when there is error
-        .fail(function() {
-            displayError();
-        });
+		},
+		error: function() {
+			displayError();
+		}
+	});
 });
 
 // Display holiday records in a datatable
