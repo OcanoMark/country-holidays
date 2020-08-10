@@ -1,4 +1,4 @@
 # holiday-web-scraper
-A mobile responsive web tool for obtaining holiday records by country and year; displaying the information in a datatable. Technologies used: HTML, CSS, JavaScript, PHP, Bootstrap, jQuery, DataTables, AJAX, Web Scraping
+A mobile responsive web tool for obtaining holiday records by country and year; displaying the information in a datatable. Technologies used: HTML, CSS, PHP, JavaScript, REST API, Bootstrap, jQuery, DataTables, AJAX
 
-Live Preview: http://marcantoni.dev/portfolio/holiday%20web%20scraper/index.html
+Live Preview: http://marcantoni.dev/portfolio/country%20holidays/index.html
