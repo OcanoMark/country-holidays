@@ -2,6 +2,7 @@
 var url = "holidays.php";
 var currYear = new Date().getFullYear();
 var weekdays = [];
+var months = [];
 
 // Sort days of the week
 weekdays["sunday"] = 0;
@@ -20,6 +21,19 @@ weekdays[3] = "Wednesday";
 weekdays[4] = "Thursday";
 weekdays[5] = "Friday";
 weekdays[6] = "Saturday";
+
+months[0] = "Jan";
+months[1] = "Feb";
+months[2] = "Mar";
+months[3] = "Apr";
+months[4] = "May";
+months[5] = "Jun";
+months[6] = "Jul";
+months[7] = "Aug";
+months[8] = "Sep";
+months[9] = "Oct";
+months[10] = "Nov";
+months[11] = "Dec";
 
 $(function() {
 	for (var i = currYear + 2; i > currYear - 6; i--) {
@@ -43,6 +57,7 @@ $(function() {
 			
 			$("#country-loader").hide();
             $("#country").attr("disabled", false);
+			$("#year").val(currYear);
 			$("#year").attr("disabled", false);
 		})
 		.fail(function() {
@@ -82,16 +97,20 @@ $("form").submit(function(e) {
 				var rows = [];
 		
 				$(holidays).each(function() {
-					if (this["type"] == "Season" || this["type"] == "Weekend" ||
+					if (this["type"] == "Season" ||
+						this["type"] == "Weekend" ||
+						this["type"] == "Observance" ||
 						this["name"] == "Additional Special Non-Working Day") {
 						return;
 					}
 					
 					var arr = [];
 					var day = new Date(this["date"]["iso"]).getDay();
+					var month = months[this["date"]["datetime"]["month"] - 1];
+					var dt = this["date"]["datetime"]["day"];
 					
 					arr.push(weekdays[day]);
-					arr.push(this["date"]["iso"]);
+					arr.push(month + " " + dt);
 					arr.push(this["name"]);
 					arr.push(this["description"]);
 					arr.push(this["type"]);
