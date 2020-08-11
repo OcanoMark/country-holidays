@@ -22,6 +22,7 @@ weekdays[4] = "Thursday";
 weekdays[5] = "Friday";
 weekdays[6] = "Saturday";
 
+// Get name of month
 months[0] = "Jan";
 months[1] = "Feb";
 months[2] = "Mar";
@@ -97,6 +98,7 @@ $("form").submit(function(e) {
 				var rows = [];
 		
 				$(holidays).each(function() {
+					// Don't include these
 					if (this["type"] == "Season" ||
 						this["type"] == "Weekend" ||
 						this["type"] == "Observance" ||
