@@ -94,7 +94,7 @@ $("form").submit(function(e) {
 		.done(function(data) {
 			if (data["meta"]["code"] == 200) {
 				var holidays = data["response"]["holidays"];
-				var headers = ["Day", "Date", "Holiday Name", "Description", "Category"];
+				var headers = ["Day", "Date", "Holiday", "Description", "Category"];
 				var rows = [];
 		
 				$(holidays).each(function() {
