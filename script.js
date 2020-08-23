@@ -121,10 +121,11 @@ $("form").submit(function(e) {
 				
 				$("#fetch-loader").hide();
 				var country = $("#country").find('option:selected').text();
+				var countryCode = $("#country").val();
 				var year = $("#year").find('option:selected').text();
 
 				// Display holiday records
-				displayTable(headers, rows, country, year);
+				displayTable(headers, rows, country, countryCode, year);
 				
 			} else {
 				displayError();
@@ -136,14 +137,17 @@ $("form").submit(function(e) {
 });
 
 // Display holiday records in a datatable
-function displayTable(headers, holidays, country, year) {
+function displayTable(headers, holidays, country, countryCode, year) {
 	var exportOpt = { columns: [0, ':visible'] };
 
     if ($.fn.DataTable.isDataTable("#holiday-table")) {
         $("#holiday-table").DataTable().destroy();
     }
 
-    $("#table-caption").html("Displaying " + year + " holidays of " + country);
+    $("#table-caption")
+		.html("Displaying " + year + " holidays of " + country + " ")
+		.append($("<img>", {src: "https://www.countryflags.io/" +
+			countryCode + "/shiny/16.png"}));
     $("#regional-div").show();
 
     $("#holiday-table")
